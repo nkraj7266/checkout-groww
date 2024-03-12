@@ -1,0 +1,90 @@
+.main {
+	height: 100vh;
+	position: relative;
+	max-width: 1350px;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 1rem;
+}
+
+.row {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+
+.orderDetails {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1;
+}
+
+.delivery h2 {
+	margin-bottom: 1rem;
+	font-size: 1.5rem;
+	font-weight: 500;
+	color: #333;
+}
+
+.address {
+	padding: 1rem 1.2rem;
+	background-color: #3333335e;
+}
+
+.address p {
+	margin-bottom: 1rem;
+	font-size: 1rem;
+	font-weight: 400;
+	color: #333;
+}
+
+.products {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.productCard {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	background-color: #aeaeae5e;
+}
+
+.productInfo {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex: 1;
+}
+
+.productInfo .image {
+	width: 100px;
+	height: 100px;
+}
+
+.details h2 {
+	font-size: 1.5rem;
+	font-weight: 500;
+	color: #333;
+}
+
+.details p {
+	font-size: 1rem;
+	font-weight: 400;
+	color: #333;
+}
+
+.orderSummary {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: calc(100% / 3);
+}
