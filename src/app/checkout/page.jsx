@@ -17,8 +17,7 @@ const Checkout = () => {
 			const res = await axios.get(
 				"https://groww-intern-assignment.vercel.app/v1/api/order-details"
 			);
-			console.log(res);
-			setData(res.products);
+			setData(res.data.products);
 		} catch (err) {
 			console.log(err);
 		} finally {
@@ -47,27 +46,39 @@ const Checkout = () => {
 				<div className={styles.row}>
 					<div className={styles.orderDetails}>
 						<div className={styles.delivery}>
-							<h2>Delivery Deatils</h2>
+							<h2>Delivery Deatils:</h2>
 							<div className={styles.address}>
-								<p> 15, Yamen Road, Yamen</p>
+								<p>15, Yamen Road, Yamen</p>
+								<p>+91 6386061705</p>
 							</div>
 						</div>
 						<div className={styles.products}>
-							<div className={styles.productCard}>
-								<div className={styles.productInfo}>
-									<div className={styles.image}>
-										<img
-											src="https://dummyimage.com/100x100/000/fff"
-											alt="Product Image"
-										/>
+							{loading ? (
+								<p>Loading...</p>
+							) : (
+								data.map((item) => (
+									<div
+										className={styles.productCard}
+										key={item.id}
+									>
+										<div className={styles.productInfo}>
+											<div className={styles.image}>
+												<img
+													src={item.image}
+													alt="Product Image"
+													width={100}
+													height={100}
+												/>
+											</div>
+											<div className={styles.details}>
+												<h2>{item.title}</h2>
+												<p>{item.price}</p>
+											</div>
+										</div>
+										<Counter quantity={item.quantity} />
 									</div>
-									<div className={styles.details}>
-										<h2>Product Name</h2>
-										<p>Product Price</p>
-									</div>
-								</div>
-								<Counter />
-							</div>
+								))
+							)}
 						</div>
 					</div>
 					<div className={styles.orderSummary}>

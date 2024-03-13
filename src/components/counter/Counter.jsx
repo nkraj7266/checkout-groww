@@ -10,7 +10,11 @@ const Counter = (props) => {
 		<div className={styles.counter}>
 			<button className={styles.change}>-</button>
 			<div className={styles.quantity}>
-				<input type="text" />
+				<input
+					type="text"
+					value={quantity}
+					onChange={(e) => setQuantity(e.target.value)}
+				/>
 			</div>
 			<button className={styles.change}>+</button>
 		</div>
