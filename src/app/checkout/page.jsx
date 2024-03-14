@@ -1,15 +1,25 @@
 "use client";
 import React from "react";
-import { useState, useEffect } from "react";
-import styles from "./checkout.module.css";
-import Counter from "@/components/counter/Counter";
 import axios from "axios";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "@/redux/slices/productsSlice";
+import styles from "./checkout.module.scss";
+import Counter from "@/components/counter/Counter";
+import Link from "next/link";
+import Loader from "@/components/loader/Loader";
 
 const Checkout = () => {
-	const [data, setData] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [dataFetched, setDataFetched] = useState(false);
 
+	const [totalPrice, setTotalPrice] = useState(0);
+	const [discount, setDiscount] = useState(0);
+	const [finalPrice, setFinalPrice] = useState(0);
+
+	// Redux
+	const dispatch = useDispatch();
 	// Fetching data
 	const assembleData = async () => {
 		setLoading(true);
@@ -17,7 +27,11 @@ const Checkout = () => {
 			const res = await axios.get(
 				"https://groww-intern-assignment.vercel.app/v1/api/order-details"
 			);
-			setData(res.data.products);
+			if (res) {
+				res.data.products.forEach((product) => {
+					dispatch(addProduct(product));
+				});
+			}
 		} catch (err) {
 			console.log(err);
 		} finally {
@@ -35,7 +49,38 @@ const Checkout = () => {
 		};
 
 		assembleDataWrapper();
-	}, []);
+	}, [dispatch]);
+
+	// Data from Redux
+	const rawData = useSelector((state) => state.products.products);
+	// filter out duplicates
+	const data = rawData.filter(
+		(item, index, self) =>
+			index ===
+			self.findIndex(
+				(t) => t.id === item.id && t.quantity === item.quantity
+			)
+	);
+
+	useEffect(() => {
+		if (data.length) {
+			setDataFetched(true);
+		}
+	}, [data]);
+
+	useEffect(() => {
+		let totalPrice = 0;
+		let discount = 0;
+		let finalPrice = 0;
+		data.forEach((item) => {
+			totalPrice += item.price * item.quantity;
+			discount += 0.2 * item.price * item.quantity;
+		});
+		setTotalPrice(totalPrice.toFixed(2));
+		setDiscount(discount.toFixed(2));
+		finalPrice = totalPrice - discount + (totalPrice >= 500 ? 0 : 50);
+		setFinalPrice(finalPrice.toFixed(2));
+	}, [data]);
 
 	return (
 		<main className={styles.main}>
@@ -46,7 +91,7 @@ const Checkout = () => {
 				<div className={styles.row}>
 					<div className={styles.orderDetails}>
 						<div className={styles.delivery}>
-							<h2>Delivery Deatils:</h2>
+							<h2>Delivery Deatils</h2>
 							<div className={styles.address}>
 								<p>15, Yamen Road, Yamen</p>
 								<p>+91 6386061705</p>
@@ -63,7 +108,7 @@ const Checkout = () => {
 									>
 										<div className={styles.productInfo}>
 											<div className={styles.image}>
-												<img
+												<Image
 													src={item.image}
 													alt="Product Image"
 													width={100}
@@ -71,22 +116,90 @@ const Checkout = () => {
 												/>
 											</div>
 											<div className={styles.details}>
-												<h2>{item.title}</h2>
-												<p>{item.price}</p>
+												<h3>{item.title}</h3>
+												<p>Rs. {item.price}</p>
 											</div>
 										</div>
-										<Counter quantity={item.quantity} />
+										<Counter
+											productData={{
+												quantity: item.quantity,
+												id: item.id,
+											}}
+										/>
 									</div>
 								))
 							)}
 						</div>
 					</div>
-					<div className={styles.orderSummary}>
-						<div className={styles.summary}>
-							<p>Lorem ipsum dolor sit amet.</p>
+					{dataFetched && (
+						<div className={styles.orderSummary}>
+							<div className={styles.summary}>
+								<h2>Price Details</h2>
+								<div className={styles.priceInfo}>
+									<div className={styles.priceRow}>
+										<p>
+											{`Price (${data.length} ${
+												data.length > 1
+													? "items"
+													: "item"
+											})`}
+										</p>
+										<p>{`Rs. ${totalPrice}`}</p>
+									</div>
+									<div className={styles.priceRow}>
+										<p>Delivery Charges</p>
+										<p>
+											{totalPrice >= 500 ? (
+												<React.Fragment>
+													<span
+														className={styles.free}
+													>
+														Rs. 50
+													</span>{" "}
+													Free
+												</React.Fragment>
+											) : (
+												"Rs. 50"
+											)}
+										</p>
+									</div>
+									<div className={styles.priceRow}>
+										<p>Discount</p>
+										<p>{`- Rs. ${discount}`}</p>
+									</div>
+								</div>
+							</div>
+
+							<div className={styles.finalPrice}>
+								<div>
+									<p>Total Amount</p>
+									<span>{`Rs. ${finalPrice}`}</span>
+								</div>
+								<div>
+									<button className={styles.checkoutButton}>
+										Payment
+									</button>
+								</div>
+							</div>
 						</div>
-					</div>
+					)}
+					{dataFetched && (
+						<div className={styles.finalPriceMob}>
+							<div>
+								<p>Total Amount</p>
+								<span>{`Rs. ${finalPrice}`}</span>
+							</div>
+							<div>
+								<Link href="/payment">
+									<button className={styles.checkoutButton}>
+										Payment
+									</button>
+								</Link>
+							</div>
+						</div>
+					)}
 				</div>
+				<Loader visible={loading} />
 			</div>
 		</main>
 	);

@@ -1,0 +1,58 @@
+.counter {
+	display: flex;
+	align-items: center;
+}
+
+.change {
+	width: 32px;
+	height: 32px;
+	background-color: #fff;
+	border: 1px solid #c2c2c2;
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: 400;
+	border-radius: 50%;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.quantity {
+	display: flex;
+	align-items: center;
+	padding: 0 6px;
+	width: 46px;
+	height: 32px;
+	border-radius: 2px;
+	background-color: #fff;
+	border: 1px solid #c2c2c2;
+	margin: 0 5px;
+
+	input {
+		border: none;
+		width: 100%;
+		font-size: 14px;
+		font-weight: 500;
+		font-family: inherit;
+		vertical-align: middle;
+		text-align: center;
+
+		&:focus {
+			outline: none;
+			background-color: #c2c2c23c;
+		}
+	}
+}
+
+.quantity input {
+	border: none;
+	width: 100%;
+	font-size: 14px;
+	font-weight: 500;
+	vertical-align: middle;
+	text-align: center;
+}
+
+@media (max-width: 576px) {
+	.counter {
+		margin-top: 0.6rem;
+	}
+}
