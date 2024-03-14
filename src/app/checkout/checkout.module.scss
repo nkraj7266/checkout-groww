@@ -180,6 +180,19 @@
 	cursor: pointer;
 }
 
+.checkoutButton:hover {
+	background-color: #daab2b;
+}
+
+.loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 200px;
+	background-color: #fff;
+}
+
 @media (max-width: 768px) {
 	.container {
 		padding: 0;

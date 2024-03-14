@@ -1,15 +1,15 @@
 import React from "react";
-import { Circles } from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 
 const Loader = () => {
 	return (
-		<Circles
+		<Oval
 			height="80"
 			width="80"
-			color="#4fa94d"
+			color="#a3a3a3"
+			secondaryColor="#9a9a9a"
 			ariaLabel="circles-loading"
-			wrapperStyle={{}}
-			wrapperClass=""
+			strokeWidth="3"
 			visible={true}
 		/>
 	);

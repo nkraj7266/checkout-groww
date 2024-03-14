@@ -11,7 +11,7 @@ import Link from "next/link";
 import Loader from "@/components/loader/Loader";
 
 const Checkout = () => {
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [dataFetched, setDataFetched] = useState(false);
 
 	const [totalPrice, setTotalPrice] = useState(0);
@@ -99,7 +99,9 @@ const Checkout = () => {
 						</div>
 						<div className={styles.products}>
 							{loading ? (
-								<p>Loading...</p>
+								<div className={styles.loader}>
+									<Loader />
+								</div>
 							) : (
 								data.map((item) => (
 									<div
@@ -176,9 +178,13 @@ const Checkout = () => {
 									<span>{`Rs. ${finalPrice}`}</span>
 								</div>
 								<div>
-									<button className={styles.checkoutButton}>
-										Payment
-									</button>
+									<Link href="/payment">
+										<button
+											className={styles.checkoutButton}
+										>
+											Payment
+										</button>
+									</Link>
 								</div>
 							</div>
 						</div>
@@ -199,7 +205,6 @@ const Checkout = () => {
 						</div>
 					)}
 				</div>
-				<Loader visible={loading} />
 			</div>
 		</main>
 	);

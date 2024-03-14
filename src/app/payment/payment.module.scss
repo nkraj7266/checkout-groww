@@ -126,9 +126,18 @@
 		cursor: pointer;
 
 		&:hover {
-			background-color: #f0c040;
+			background-color: #daab2b;
 		}
 	}
+}
+
+.loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 200px;
+	background-color: #fff;
 }
 
 .active {
