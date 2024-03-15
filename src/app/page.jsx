@@ -11,6 +11,12 @@ import Link from "next/link";
 import Loader from "@/components/loader/Loader";
 
 const Checkout = () => {
+	const dispatch = useDispatch();
+	const rawData = useSelector((state) => state.products.products);
+	const data = rawData.filter(
+		(item, index, self) => index === self.findIndex((t) => t.id === item.id)
+	);
+
 	const [loading, setLoading] = useState(false);
 	const [dataFetched, setDataFetched] = useState(false);
 
@@ -18,9 +24,6 @@ const Checkout = () => {
 	const [discount, setDiscount] = useState(0);
 	const [finalPrice, setFinalPrice] = useState(0);
 
-	// Redux
-	const dispatch = useDispatch();
-	// Fetching data
 	const assembleData = async () => {
 		setLoading(true);
 		try {
@@ -51,13 +54,6 @@ const Checkout = () => {
 
 		assembleDataWrapper();
 	}, [dispatch]);
-
-	// Data from Redux
-	const rawData = useSelector((state) => state.products.products);
-	// filter out duplicates
-	const data = rawData.filter(
-		(item, index, self) => index === self.findIndex((t) => t.id === item.id)
-	);
 
 	useEffect(() => {
 		if (data.length) {

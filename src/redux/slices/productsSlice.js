@@ -4,12 +4,15 @@ const productsSlice = createSlice({
 	name: "products",
 	initialState: {
 		products: [],
-		payOption: null,
-		orderStatus: null,
 	},
 	reducers: {
 		addProduct: (state, action) => {
 			state.products.push(action.payload);
+		},
+		deleteProduct: (state, action) => {
+			state.products = state.products.filter(
+				(product) => product.id !== action.payload.id
+			);
 		},
 		updateQuantity: (state, action) => {
 			const product = state.products.find(
@@ -22,20 +25,9 @@ const productsSlice = createSlice({
 		clearProducts: (state) => {
 			return [];
 		},
-		setPayOptions: (state, action) => {
-			state.payOption = action.payload;
-		},
-		setOrderStatus: (state, action) => {
-			state.orderStatus = action.payload;
-		},
 	},
 });
 
-export const {
-	addProduct,
-	updateQuantity,
-	clearProducts,
-	setPayOptions,
-	setOrderStatus,
-} = productsSlice.actions;
+export const { addProduct, deleteProduct, updateQuantity, clearProducts } =
+	productsSlice.actions;
 export default productsSlice.reducer;

@@ -1,12 +1,11 @@
 "use client";
 import axios from "axios";
+import Image from "next/image";
+import styles from "./payment.module.scss";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./payment.module.scss";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { setPayOptions, setOrderStatus } from "@/redux/slices/productsSlice";
-
+import { setPayOptions, setOrderStatus } from "@/redux/slices/paymentSlice";
 import { toast, toastDict } from "@/lib/toastify";
 
 import cards from "@/../public/assets/images/cards.png";
@@ -55,7 +54,7 @@ const Payment = () => {
 
 	useEffect(() => {
 		if (!data.length) {
-			router.push("/checkout");
+			router.push("/");
 		}
 
 		let totalPrice = 0;

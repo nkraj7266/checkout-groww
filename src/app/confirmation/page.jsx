@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styles from "./confirmation.module.scss";
-import Image from "next/image";
 
 import cross from "@/../public/assets/images/cross.png";
 import tick from "@/../public/assets/images/tick.png";
@@ -19,12 +19,12 @@ const Confirmation = () => {
 
 	// Redux
 	const data = useSelector((state) => state.products.products);
-	const payOption = useSelector((state) => state.products.payOption);
-	const orderStatus = useSelector((state) => state.products.orderStatus);
+	const payOption = useSelector((state) => state.payment.payOption);
+	const orderStatus = useSelector((state) => state.payment.orderStatus);
 
 	useEffect(() => {
 		if (!data.length) {
-			router.push("/checkout");
+			router.push("/");
 		}
 
 		let totalPrice = 0;

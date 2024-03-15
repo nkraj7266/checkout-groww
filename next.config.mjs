@@ -7,6 +7,11 @@ const nextConfig = {
 				hostname: "fakestoreapi.com",
 				pathname: "**",
 			},
+			{
+				protocol: "https",
+				hostname: "groww.in",
+				pathname: "**",
+			},
 		],
 	},
 };
