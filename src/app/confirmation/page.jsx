@@ -21,11 +21,12 @@ const Confirmation = () => {
 	const data = useSelector((state) => state.products.products);
 	const payOption = useSelector((state) => state.products.payOption);
 	const orderStatus = useSelector((state) => state.products.orderStatus);
-	if (!data.length) {
-		router.push("/checkout");
-	}
 
 	useEffect(() => {
+		if (!data.length) {
+			router.push("/checkout");
+		}
+
 		let totalPrice = 0;
 		let discount = 0;
 		let finalPrice = 0;

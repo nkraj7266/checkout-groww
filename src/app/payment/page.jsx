@@ -52,11 +52,12 @@ const Payment = () => {
 
 	// Redux
 	const data = useSelector((state) => state.products.products);
-	if (!data.length) {
-		router.push("/checkout");
-	}
 
 	useEffect(() => {
+		if (!data.length) {
+			router.push("/checkout");
+		}
+
 		let totalPrice = 0;
 		let discount = 0;
 		let finalPrice = 0;
