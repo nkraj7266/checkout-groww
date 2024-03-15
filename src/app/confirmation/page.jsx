@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import styles from "./confirmation.module.scss";
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 import cross from "@/../public/assets/images/cross.png";
@@ -14,16 +13,14 @@ import warn from "@/../public/assets/images/warn.png";
 const Confirmation = () => {
 	const router = useRouter();
 
-	const searchParams = useSearchParams();
-	const payOption = searchParams.get("payOption");
-	const orderStatus = searchParams.get("orderStatus");
-
 	const [totalPrice, setTotalPrice] = useState(0);
 	const [discount, setDiscount] = useState(0);
 	const [finalPrice, setFinalPrice] = useState(0);
 
 	// Redux
 	const data = useSelector((state) => state.products.products);
+	const payOption = useSelector((state) => state.products.payOption);
+	const orderStatus = useSelector((state) => state.products.orderStatus);
 	if (!data.length) {
 		router.push("/checkout");
 	}

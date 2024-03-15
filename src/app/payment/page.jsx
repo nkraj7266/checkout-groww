@@ -1,10 +1,11 @@
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./payment.module.scss";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { setPayOptions, setOrderStatus } from "@/redux/slices/productsSlice";
 
 import { toast, toastDict } from "@/lib/toastify";
 
@@ -21,14 +22,18 @@ const Payment = () => {
 
 	// Router
 	const router = useRouter();
-	const orderStatus = 1 + Math.floor(Math.random() * 3);
+
+	// Redux
+	const dispatch = useDispatch();
 
 	const handlePayOption = (option) => () => {
 		if (option === payOption) {
+			dispatch(setPayOptions(0));
 			setPayOption(0);
 			return;
 		}
 		setPayOption(option);
+		dispatch(setPayOptions(option));
 	};
 
 	const handlePayment = () => {
@@ -36,9 +41,9 @@ const Payment = () => {
 			toast.warn("Please select a payment method", toastDict);
 			return;
 		}
-		router.push(
-			`/confirmation?payOption=${payOption}&orderStatus=${orderStatus}`
-		);
+		const orderStatus = 1 + Math.floor(Math.random() * 3);
+		dispatch(setOrderStatus(orderStatus));
+		router.push("/confirmation");
 	};
 
 	const [totalPrice, setTotalPrice] = useState(0);
