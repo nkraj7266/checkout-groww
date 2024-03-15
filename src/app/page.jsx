@@ -2,20 +2,22 @@
 import React from "react";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, clearProducts } from "@/redux/slices/productsSlice";
+import { addProduct } from "@/redux/slices/productsSlice";
+import { addMethods } from "@/redux/slices/paymentSlice";
+import { setColor, setLogo, setName } from "@/redux/slices/themeSlice";
 import styles from "./checkout.module.scss";
+
 import Counter from "@/components/counter/Counter";
-import Link from "next/link";
 import Loader from "@/components/loader/Loader";
+import Nothing from "@/../public/assets/images/nothing.svg";
 
 const Checkout = () => {
 	const dispatch = useDispatch();
-	const rawData = useSelector((state) => state.products.products);
-	const data = rawData.filter(
-		(item, index, self) => index === self.findIndex((t) => t.id === item.id)
-	);
+	const data = useSelector((state) => state.products.products);
+	const theme = useSelector((state) => state.theme);
 
 	const [loading, setLoading] = useState(false);
 	const [dataFetched, setDataFetched] = useState(false);
@@ -27,14 +29,22 @@ const Checkout = () => {
 	const assembleData = async () => {
 		setLoading(true);
 		try {
-			const res = await axios
+			await axios
 				.get(
 					"https://groww-intern-assignment.vercel.app/v1/api/order-details"
 				)
 				.then((res) => {
-					res.data.products.forEach((product) => {
-						dispatch(addProduct(product));
-					});
+					dispatch(addProduct(res.data.products));
+					dispatch(addMethods(res.data.paymentMethods));
+				});
+			await axios
+				.get(
+					"https://groww-intern-assignment.vercel.app/v1/api/merchant-metadata"
+				)
+				.then((res) => {
+					dispatch(setLogo(res.data.merchantLogo));
+					dispatch(setName(res.data.merchantName));
+					dispatch(setColor(res.data.theme));
 				});
 		} catch (err) {
 			console.log(err);
@@ -47,8 +57,8 @@ const Checkout = () => {
 		const assembleDataWrapper = async () => {
 			try {
 				await assembleData();
-			} catch (err) {
-				console.log(err);
+			} catch (error) {
+				console.log(error);
 			}
 		};
 
@@ -56,16 +66,14 @@ const Checkout = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (data.length) {
+		if (data?.length) {
 			setDataFetched(true);
 		}
-	}, [data]);
 
-	useEffect(() => {
 		let totalPrice = 0;
 		let discount = 0;
 		let finalPrice = 0;
-		data.forEach((item) => {
+		data?.forEach((item) => {
 			totalPrice += item.price * item.quantity;
 			discount += 0.2 * item.price * item.quantity;
 		});
@@ -86,45 +94,62 @@ const Checkout = () => {
 						<div className={styles.delivery}>
 							<h2>Delivery Deatils</h2>
 							<div className={styles.address}>
-								<p>15, Yamen Road, Yamen</p>
-								<p>+91 6386061705</p>
+								<p>
+									<span>Address: </span>15, Yamen Road, Yamen
+								</p>
+								<p>
+									<span>Mobile No.: </span>+91 63XXXXXX00
+								</p>
 							</div>
 						</div>
-						<div className={styles.products}>
-							{loading ? (
-								<div className={styles.loader}>
-									<Loader />
-								</div>
-							) : (
-								data.map((item) => (
-									<div
-										className={styles.productCard}
-										key={item.id}
-									>
-										<div className={styles.productInfo}>
-											<div className={styles.image}>
-												<Image
-													src={item.image}
-													alt="Product Image"
-													width={100}
-													height={100}
-												/>
-											</div>
-											<div className={styles.details}>
-												<h3>{item.title}</h3>
-												<p>Rs. {item.price}</p>
-											</div>
-										</div>
-										<Counter
-											productData={{
-												quantity: item.quantity,
-												id: item.id,
-											}}
-										/>
+						{dataFetched ? (
+							<div className={styles.products}>
+								{loading ? (
+									<div className={styles.loader}>
+										<Loader />
 									</div>
-								))
-							)}
-						</div>
+								) : (
+									data?.map((item) => (
+										<div
+											className={styles.productCard}
+											key={item.id}
+										>
+											<div className={styles.productInfo}>
+												<div className={styles.image}>
+													<Image
+														src={item.image}
+														alt="Product Image"
+														width={100}
+														height={100}
+													/>
+												</div>
+												<div className={styles.details}>
+													<h3>{item.title}</h3>
+													<p>Rs. {item.price}</p>
+												</div>
+											</div>
+											<Counter
+												productData={{
+													quantity: item.quantity,
+													id: item.id,
+												}}
+											/>
+										</div>
+									))
+								)}
+							</div>
+						) : (
+							<div className={styles.placeHolder}>
+								<Image
+									src={Nothing}
+									alt="Nothing to show"
+									width={300}
+									height={300}
+									style={{ width: "300px", height: "auto" }}
+								/>
+								<h4>Nothing Here Go and Add Something !</h4>
+							</div>
+						)}
 					</div>
 					{dataFetched && (
 						<div className={styles.orderSummary}>

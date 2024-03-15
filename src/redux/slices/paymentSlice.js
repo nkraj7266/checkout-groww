@@ -5,11 +5,11 @@ const paymentSlice = createSlice({
 	initialState: {
 		payOption: null,
 		orderStatus: null,
-		methods: [],
+		methods: null,
 	},
 	reducers: {
 		addMethods: (state, action) => {
-			state.methods.push(action.payload);
+			state.methods = action.payload;
 		},
 		setPayOptions: (state, action) => {
 			state.payOption = action.payload;
