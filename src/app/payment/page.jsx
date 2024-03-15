@@ -24,6 +24,10 @@ const Payment = () => {
 	const orderStatus = 1 + Math.floor(Math.random() * 3);
 
 	const handlePayOption = (option) => () => {
+		if (option === payOption) {
+			setPayOption(0);
+			return;
+		}
 		setPayOption(option);
 	};
 

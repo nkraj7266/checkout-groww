@@ -34,7 +34,7 @@ const Confirmation = () => {
 		let finalPrice = 0;
 		data.forEach((item) => {
 			totalPrice += item.price * item.quantity;
-			discount += 0.2 * item.quantity;
+			discount += 0.2 * item.price * item.quantity;
 		});
 		setTotalPrice(totalPrice.toFixed(2));
 		setDiscount(discount.toFixed(2));

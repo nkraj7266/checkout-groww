@@ -9,14 +9,6 @@ const productsSlice = createSlice({
 		addProduct: (state, action) => {
 			state.products.push(action.payload);
 		},
-		updatePrice: (state, action) => {
-			const product = state.products.find(
-				(product) => product.id === action.payload.id
-			);
-			if (product) {
-				product.price = action.payload.price;
-			}
-		},
 		updateQuantity: (state, action) => {
 			const product = state.products.find(
 				(product) => product.id === action.payload.id
@@ -25,9 +17,12 @@ const productsSlice = createSlice({
 				product.quantity = action.payload.quantity;
 			}
 		},
+		clearProducts: (state) => {
+			return [];
+		},
 	},
 });
 
-export const { addProduct, updatePrice, updateQuantity } =
+export const { addProduct, updateQuantity, clearProducts } =
 	productsSlice.actions;
 export default productsSlice.reducer;

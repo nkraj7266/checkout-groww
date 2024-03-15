@@ -4,14 +4,14 @@ import axios from "axios";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from "@/redux/slices/productsSlice";
+import { addProduct, clearProducts } from "@/redux/slices/productsSlice";
 import styles from "./checkout.module.scss";
 import Counter from "@/components/counter/Counter";
 import Link from "next/link";
 import Loader from "@/components/loader/Loader";
 
 const Checkout = () => {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [dataFetched, setDataFetched] = useState(false);
 
 	const [totalPrice, setTotalPrice] = useState(0);
@@ -24,14 +24,15 @@ const Checkout = () => {
 	const assembleData = async () => {
 		setLoading(true);
 		try {
-			const res = await axios.get(
-				"https://groww-intern-assignment.vercel.app/v1/api/order-details"
-			);
-			if (res) {
-				res.data.products.forEach((product) => {
-					dispatch(addProduct(product));
+			const res = await axios
+				.get(
+					"https://groww-intern-assignment.vercel.app/v1/api/order-details"
+				)
+				.then((res) => {
+					res.data.products.forEach((product) => {
+						dispatch(addProduct(product));
+					});
 				});
-			}
 		} catch (err) {
 			console.log(err);
 		} finally {
@@ -55,11 +56,7 @@ const Checkout = () => {
 	const rawData = useSelector((state) => state.products.products);
 	// filter out duplicates
 	const data = rawData.filter(
-		(item, index, self) =>
-			index ===
-			self.findIndex(
-				(t) => t.id === item.id && t.quantity === item.quantity
-			)
+		(item, index, self) => index === self.findIndex((t) => t.id === item.id)
 	);
 
 	useEffect(() => {
